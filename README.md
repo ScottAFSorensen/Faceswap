@@ -2,7 +2,12 @@
 
 
 ## Overleaf link
+Skriv alle idéer og shit her:
 https://www.overleaf.com/9526757851nzkxqbhqgxfp
+
+##main.py
+Trykk på 'q' for å avslutte video.
+Trykk på spacebar for å hente ut ett bilde.
 
 
 
