@@ -2,7 +2,7 @@
 
 
 ## Overleaf link
-Skriv alle idéer og shit her:
+Skriv alle idéer og forklaringer og stuff her:
 https://www.overleaf.com/9526757851nzkxqbhqgxfp
 
 ## main.py

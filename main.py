@@ -7,7 +7,7 @@ cap = cv2.VideoCapture("Obama_and_Key.mp4")
 
 #Using alread existing library for face detector and finding facial landmarks.
 detector = dlib.get_frontal_face_detector() # face detector
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat") #Using pre-trained network to detect facial landmarks
+predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat") #Using pre-trained model to detect facial landmarks
 
 FRAME = None # single frame taken from video
 
@@ -33,7 +33,7 @@ n_markers = 27
 #markers 27-67 nose, eyes, mouth
 facial_landmarks = np.zeros((n_faces, n_markers, 2)) # create mat
 
-gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY)
+gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY) #use detector on grayscale image
 faces = detector(gray) #dlib
 
 for m in range(0, n_faces):
@@ -56,4 +56,5 @@ for m in range(0, n_faces):
 cv2.imshow('Frame', FRAME)
 cv2.waitKey()
 
-#---------------------------------------------------------------------
+#----------------------Convex hull part------------------------------------------
+
