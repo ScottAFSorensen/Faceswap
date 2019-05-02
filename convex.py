@@ -1,6 +1,6 @@
 import numpy as np
 
-# Using convex hull to extract the face
+# Using convex hull to extract the face using the facial landmarks
 # References is this page https://algorithmtutor.com/Computational-Geometry/Convex-Hull-Algorithms-Jarvis-s-March/
 # We are using the jarvis's march as described in this page.
 
