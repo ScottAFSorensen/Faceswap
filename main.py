@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import dlib
 from convex import get_hull
-from crop import get_face
+from crop import extract_face
  
 #cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 cap = cv2.VideoCapture("Obama_and_Key.mp4") 
@@ -28,6 +28,7 @@ while(True):
 cv2.destroyAllWindows() # close video
 
 #----------------get facial landmarks-----------------------
+
 n_faces = 2
 marker_start = 0
 marker_end = 27
@@ -66,12 +67,11 @@ cv2.waitKey()
 face1_hull = get_hull(facial_landmarks[0])
 face2_hull = get_hull(facial_landmarks[1])
 
-#---------------------Crop out hull (crop.py)---------------------------------------
 
-face1_mask, face1_region = get_face(face1_hull, FRAME)
-face2_mask, face2_region = get_face(face2_hull, FRAME)
-cv2.imshow('face1', face1_region)
-cv2.imshow('face2', face2_region)
+#---------------------Extract face and mask (crop.py)---------------------------------------
+
+face1_mask,_ = extract_face(face1_hull, FRAME)
+face2_mask,_ = extract_face(face2_hull, FRAME)
 cv2.imshow('mask1', face1_mask)
 cv2.imshow('mask2', face2_mask)
 cv2.waitKey()

@@ -2,20 +2,18 @@ import numpy as np
 import cv2
 
 
-def get_face(convex_hull, image):
-    # Find box region to crop
-    box = cv2.boundingRect(convex_hull) 
-    y,x,w,z = box
+def extract_face(convex_hull, image): 
+    
+    mask = np.zeros((image.shape[0], image.shape[1])) # gray level i
+    
 
-    cropped = image[x:x+z, y:y+w]
+    cv2.fillConvexPoly(mask, convex_hull, 255)
 
-    # Find mask (binary image)
-    convex_hull = convex_hull - convex_hull.min(axis=0)
+    
 
-    mask = np.zeros(cropped.shape[:2], np.uint8)
-    cv2.drawContours(mask, [convex_hull], -1, (255, 255, 255), -1, cv2.LINE_AA)
-
-    # bitwise and
-    face_region = cv2.bitwise_and(cropped, cropped, mask=mask)
+    print(type(mask))
+    print(type(image))
+    mask = mask.astype('np.uint8')
+    face_region = cv2.bitwise_and(image, image, mask=mask)
 
     return mask, face_region
