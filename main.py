@@ -29,8 +29,8 @@ cv2.destroyAllWindows() # close video
 
 #----------------get facial landmarks-----------------------
 n_faces = 2
-marker_start = 17
-marker_end = 68
+marker_start = 0
+marker_end = 27
 n_markers = marker_end - marker_start
 #markers 0-16 is jawline/face shape
 #markers 17-26 eyebrows

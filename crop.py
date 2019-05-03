@@ -7,7 +7,7 @@ def get_face(convex_hull, image):
     box = cv2.boundingRect(convex_hull) 
     y,x,w,z = box
 
-    cropped = image
+    cropped = image[x:x+z, y:y+w]
 
     # Find mask (binary image)
     convex_hull = convex_hull - convex_hull.min(axis=0)
