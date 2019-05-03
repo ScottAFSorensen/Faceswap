@@ -70,8 +70,10 @@ face2_hull = get_hull(facial_landmarks[1])
 
 #---------------------Extract face and mask (crop.py)---------------------------------------
 
-face1_mask,_ = extract_face(face1_hull, FRAME)
-face2_mask,_ = extract_face(face2_hull, FRAME)
+face1_mask, face1 = extract_face(face1_hull, FRAME)
+face2_mask, face2 = extract_face(face2_hull, FRAME)
+cv2.imshow('face1', face1)
+cv2.imshow('face2', face2)
 cv2.imshow('mask1', face1_mask)
 cv2.imshow('mask2', face2_mask)
 cv2.waitKey()
