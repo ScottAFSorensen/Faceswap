@@ -75,7 +75,7 @@ cv2.imshow('face2', face2_region)
 cv2.imshow('mask1', face1_mask)
 cv2.imshow('mask2', face2_mask)
 cv2.waitKey()
-# test
+
 # --------------------Affine transform----------------------------------------------
 
 
