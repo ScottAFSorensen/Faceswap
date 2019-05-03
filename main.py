@@ -66,6 +66,21 @@ cv2.waitKey()
 face1_hull = get_hull(facial_landmarks[0])
 face2_hull = get_hull(facial_landmarks[1])
 
+
+# --------------------- Trying to find the delauney triangulation, using packages ------------------------
+# Crates a rectangle the size of the image,
+size = FRAME.shape
+rect = (0, 0, size[1], size[0])
+
+# use the subdiv2d method
+subdiv = cv2.Subdiv2D(rect)
+
+for p in face1_hull:
+    subdiv.insert(tuple(p))
+
+
+
+
 # ---------------------Crop out hull (crop.py)---------------------------------------
 
 face1_mask, face1_region = get_face(face1_hull, FRAME)
