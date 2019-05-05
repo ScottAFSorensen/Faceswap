@@ -71,8 +71,8 @@ face2_hull = get_hull(facial_landmarks[1])
 
 face1_mask, face1 = extract_face(face1_hull, FRAME)
 face2_mask, face2 = extract_face(face2_hull, FRAME)
-cv2.imshow('face1', face1)
-cv2.imshow('face2', face2)
+#cv2.imshow('face1', face1)
+#cv2.imshow('face2', face2)
 #cv2.imshow('mask1', face1_mask)
 #cv2.imshow('mask2', face2_mask)
 cv2.waitKey()
@@ -80,8 +80,11 @@ cv2.waitKey()
 
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
-triang_image1 = delaunay_triangulation(face1_hull, facial_landmarks[0], FRAME)
-cv2.imshow('delaunay', triang_image1)
+triang_image1 = delaunay_triangulation(face1_hull, facial_landmarks[0], face1)
+triang_image2 = delaunay_triangulation(face2_hull, facial_landmarks[1], face2)
+
+cv2.imshow('delaunay1', triang_image1)
+cv2.imshow('delaunay2', triang_image2)
 cv2.waitKey()
 
 

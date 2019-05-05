@@ -21,21 +21,23 @@ def extract_face(convex_hull, image):
 
 
 def delaunay_triangulation(convex_hull, facial_landmarks, image):
+    facial_landmarks = facial_landmarks.tolist()
 
-    # WIP
     bounding_box = cv2.boundingRect(convex_hull)
+
     subdiv = cv2.Subdiv2D(bounding_box)
     subdiv.insert(facial_landmarks)
 
     triang = subdiv.getTriangleList()
     triang = np.array(triang, dtype=np.int32)
 
-    for t in triang:
-        pt1 = (t[0], t[1])
-        pt2 = (t[2], t[3])
-        pt3 = (t[4], t[5])
-        cv2.line(image, pt1, pt2, (0, 0, 255), 2)
-        cv2.line(image, pt2, pt3, (0, 0, 255), 2)
-        cv2.line(image, pt1, pt3, (0, 0, 255), 2)
+    for coordinate in triang:
+        pt1 = (coordinate[0], coordinate[1])
+        pt2 = (coordinate[2], coordinate[3])
+        pt3 = (coordinate[4], coordinate[5])
+
+        cv2.line(image, pt1, pt2, (0, 0, 255), 1)
+        cv2.line(image, pt2, pt3, (0, 255, 0), 1)
+        cv2.line(image, pt3, pt1, (255, 0, 0), 1)
     
     return image
