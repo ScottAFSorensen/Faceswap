@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import dlib
 from convex import get_hull
-from face import extract_face
+from face import extract_face, delaunay_triangulation
  
 # cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 cap = cv2.VideoCapture("Obama_and_Key.mp4") 
@@ -57,8 +57,8 @@ for m in range(0, n_faces):
 
         # cv2.putText(FRAME,str(n),(x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(0,255,255),2,cv2.LINE_AA) # show marker number
     
-cv2.imshow('Frame', FRAME)
-cv2.waitKey()
+#cv2.imshow('Frame', FRAME)
+#cv2.waitKey()
 
 # ----------------------Convex hull (convex.py)------------------------------------------
 
@@ -73,14 +73,16 @@ face1_mask, face1 = extract_face(face1_hull, FRAME)
 face2_mask, face2 = extract_face(face2_hull, FRAME)
 cv2.imshow('face1', face1)
 cv2.imshow('face2', face2)
-cv2.imshow('mask1', face1_mask)
-cv2.imshow('mask2', face2_mask)
+#cv2.imshow('mask1', face1_mask)
+#cv2.imshow('mask2', face2_mask)
 cv2.waitKey()
 
 
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
-# Crates a rectangle the size of the image,
 
+triang_image1 = delaunay_triangulation(face1_hull, facial_landmarks[0], FRAME)
+cv2.imshow('delaunay', triang_image1)
+cv2.waitKey()
 
 
 
