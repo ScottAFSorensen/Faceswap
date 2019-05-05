@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import dlib
 from convex import get_hull
-from crop import extract_face
+from face import extract_face
  
 # cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 cap = cv2.VideoCapture("Obama_and_Key.mp4") 
@@ -80,14 +80,8 @@ cv2.waitKey()
 
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 # Crates a rectangle the size of the image,
-size = FRAME.shape
-rect = (0, 0, size[1], size[0])
 
-# use the subdiv2d method
-subdiv = cv2.Subdiv2D(rect)
 
-for p in face1_hull:
-    subdiv.insert(tuple(p))
 
 
 
