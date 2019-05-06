@@ -32,6 +32,7 @@ def delaunay_triangulation(convex_hull, facial_landmarks, image):
     triang = subdiv.getTriangleList()
     triang = np.array(triang, dtype=np.int32)
 
+    # For vizualisation
     for coordinate in triang:
         pt1 = (coordinate[0], coordinate[1])
         pt2 = (coordinate[2], coordinate[3])
