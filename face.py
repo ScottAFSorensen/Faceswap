@@ -24,10 +24,10 @@ def extract_face(convex_hull, image):
 def delaunay_triangulation(convex_hull, facial_landmarks, image):
     facial_landmarks = facial_landmarks.tolist()
 
-    size = image.shape
     bounding_box = cv2.boundingRect(convex_hull)
-    rect = (0, 0, size[1], size[0])
-    subdiv = cv2.Subdiv2D(rect)
+    print(bounding_box)
+ 
+    subdiv = cv2.Subdiv2D(bounding_box)
     subdiv.insert(facial_landmarks)
 
     triang = subdiv.getTriangleList()
@@ -42,5 +42,23 @@ def delaunay_triangulation(convex_hull, facial_landmarks, image):
         cv2.line(image, pt1, pt2, (0, 0, 255), 1)
         cv2.line(image, pt2, pt3, (0, 255, 0), 1)
         cv2.line(image, pt3, pt1, (255, 0, 0), 1)
+
+        #index1 = np.where((facial_landmarks == pt1).all(axis=1))
+        #index1 = extract_index_nparray(index1)
+
+        #index2 = np.where((facial_landmarks == pt2).all(axis=1))
+        #index2 = extract_index_nparray(index2)
+
+        #index3 = np.where((facial_landmarks == pt3).all(axis=1))
+        #index3 = extract_index_nparray(index3)
     
     return image
+
+def extract_index_nparray(nparray):
+    index = None
+
+    for num in nparray[0]:
+
+        index = num
+        break
+    return index
