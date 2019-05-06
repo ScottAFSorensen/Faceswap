@@ -23,9 +23,10 @@ def extract_face(convex_hull, image):
 def delaunay_triangulation(convex_hull, facial_landmarks, image):
     facial_landmarks = facial_landmarks.tolist()
 
+    size = image.shape
     bounding_box = cv2.boundingRect(convex_hull)
-
-    subdiv = cv2.Subdiv2D(bounding_box)
+    rect = (0, 0, size[1], size[0])
+    subdiv = cv2.Subdiv2D(rect)
     subdiv.insert(facial_landmarks)
 
     triang = subdiv.getTriangleList()
