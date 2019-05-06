@@ -25,6 +25,7 @@ while(True):
 
     if cv2.waitKey(25) & 0xFF == ord(' '):  # Spacebar, take image from video
         FRAME = train_image
+        ref_image = np.copy(FRAME)
         break
         
 cv2.destroyAllWindows() # close video
@@ -76,9 +77,6 @@ face2_mask, face2 = extract_face(face2_hull, FRAME)
 #cv2.imshow('face2', face2)
 #cv2.imshow('mask1', face1_mask)
 #cv2.imshow('mask2', face2_mask)
-cv2.waitKey()
-
-
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
 triang_image1 = delaunay_triangulation(face1_hull, facial_landmarks[0], face1)
@@ -89,12 +87,12 @@ cv2.imshow('delaunay2', triang_image2)
 cv2.waitKey()
 
 
-
-
 # --------------------Affine transform----------------------------------------------
-img_1_face_to_img_2 = apply_affine_transformation(delauney_1, hull_1, hull_2, img_1, img_2)
-img_2_face_to_img_1 = apply_affine_transformation(delauney_2, hull_2, hull_1, img_2, img_1)
+FRAME = apply_affine_transformation(triang_image1, face1_hull, face2_hull, ref_image, FRAME)
+FRAME = apply_affine_transformation(triang_image2, face2_hull, face1_hull, ref_image, FRAME)
 
+# swap_1 = merge_mask_with_image(hull_2, img_1_face_to_img_2, img_2)
 
-
+# -------------------- Seamless cloning easy and short -----------------
+# new_image = cv2.seamlessClone(src, dest, mask, center, cv2.MIXED_CLONE)
 
