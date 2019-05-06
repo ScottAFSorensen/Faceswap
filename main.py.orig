@@ -24,8 +24,12 @@ while(True):
         break
 
     if cv2.waitKey(25) & 0xFF == ord(' '):  # Spacebar, take image from video
+<<<<<<< HEAD
         FRAME = train_image
         ref_image = np.copy(FRAME)
+=======
+        FRAME = frame
+>>>>>>> e23f7c0ebbb6f02ac876135a4999a6da6c5200fe
         break
         
 cv2.destroyAllWindows() # close video
@@ -78,6 +82,12 @@ face2_mask, face2 = extract_face(face2_hull, FRAME)
 #cv2.imshow('face2', face2)
 #cv2.imshow('mask1', face1_mask)
 #cv2.imshow('mask2', face2_mask)
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> e23f7c0ebbb6f02ac876135a4999a6da6c5200fe
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
 triang_image1, triangles1 = delaunay_triangulation(face1_hull, facial_landmarks[0], face1)
@@ -96,13 +106,19 @@ for triangle in triangles1:
     cv2.line(face2, pt3, pt1, (255, 0, 0), 1) # R
 
 cv2.imshow('delaunay1', triang_image1)
-cv2.imshow('delaunay2', triang_image2)
+
+cv2.imshow('delaunay2', face2)
 cv2.waitKey()
 
 
 # --------------------Affine transform----------------------------------------------
+<<<<<<< HEAD
 FRAME = apply_affine_transformation(triang_image1, face1_hull, face2_hull, ref_image, FRAME)
 FRAME = apply_affine_transformation(triang_image2, face2_hull, face1_hull, ref_image, FRAME)
+=======
+
+
+>>>>>>> e23f7c0ebbb6f02ac876135a4999a6da6c5200fe
 
 # swap_1 = merge_mask_with_image(hull_2, img_1_face_to_img_2, img_2)
 
