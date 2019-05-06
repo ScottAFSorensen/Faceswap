@@ -92,6 +92,8 @@ cv2.waitKey()
 
 
 # --------------------Affine transform----------------------------------------------
+img_1_face_to_img_2 = apply_affine_transformation(delauney_1, hull_1, hull_2, img_1, img_2)
+img_2_face_to_img_1 = apply_affine_transformation(delauney_2, hull_2, hull_1, img_2, img_1)
 
 
 

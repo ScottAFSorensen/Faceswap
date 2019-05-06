@@ -8,6 +8,7 @@ def extract_face(convex_hull, image):
     
     cv2.fillConvexPoly(mask, convex_hull, 1)
     # print(type(mask))
+
     mask = mask.astype(np.uint8)
 
     face_region = np.zeros_like(image)
