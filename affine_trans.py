@@ -16,7 +16,6 @@ def get_affine(src, src_tri, dest_tri, size):
 def morph_affine(tri_1, tri_2, orig_img, morphed_image):
     x_1, y_1, w_1, h_1 = cv2.boundingRect(np.float32([tri_1]))
     x_2, y_2, w_2, h_2 = cv2.boundingRect(np.float32([tri_2]))
-
     # maybe i can just use a rotation rectangle instead of offset stuff ?
     # https://docs.opencv.org/3.1.0/dd/d49/tutorial_py_contour_features.html
 
