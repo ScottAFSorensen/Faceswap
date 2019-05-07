@@ -3,7 +3,7 @@ import numpy as np
 import dlib
 from convex import get_hull
 from face import extract_face, delaunay_triangulation
-from affine_trans import affine_trans
+from affine_trans import morph_affine
  
 # cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 cap = cv2.VideoCapture(0)
@@ -15,7 +15,7 @@ detector = dlib.get_frontal_face_detector() # face detector
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 FRAME = train_image #None # single frame taken from video
-ref_image = np.copy(FRAME)
+
 '''
 while(True):
     
@@ -82,26 +82,24 @@ face2_mask, face2 = extract_face(face2_hull, FRAME)
 #cv2.imshow('mask2', face2_mask)
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
-triang_image, triangles_index1, triangles1 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], face1)
+triang_image, triangles_index1, triangles1, triangles2 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], face1)
 #triang_image2, triangles2 = delaunay_triangulation(face2_hull, facial_landmarks[1], face2)
 
-'''
-for triangle in triangles1:
 
-    pt1 = tuple(landmarks_points[triangle[0]])
-    pt2 = tuple(landmarks_points[triangle[1]])
-    pt3 = tuple(landmarks_points[triangle[2]])
-
-    cv2.line(face2, pt1, pt2, (0, 0, 255), 1) # B
-    cv2.line(face2, pt2, pt3, (0, 255, 0), 1) # G
-    cv2.line(face2, pt3, pt1, (255, 0, 0), 1) # R
-'''
-cv2.imshow('delaunay', triang_image)
-cv2.waitKey()
-
+#cv2.imshow('delaunay', triang_image)
+#cv2.waitKey()
 
 # --------------------Affine transform----------------------------------------------
-FRAME = affine_trans(triang_image1, face1_hull, face2_hull, ref_image, FRAME)
+
+FRAME_copy = np.copy(FRAME)
+for i in range(len(triangles1)):
+    morph_affine(triangles1[i], triangles2[i], FRAME_copy, FRAME_copy)
+
+
+#FRAME = morph_affine(triang_image)
+
+
+
 # FRAME = apply_affine_transformation(triang_image2, face2_hull, face1_hull, ref_image, FRAME)
 
 # swap_1 = merge_mask_with_image(hull_2, img_1_face_to_img_2, img_2)

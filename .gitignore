@@ -1,5 +1,8 @@
 testing*
 .idea/
+.idea
+main.py.orig
+main.py~
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
