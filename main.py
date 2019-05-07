@@ -82,11 +82,10 @@ face2_mask, face2 = extract_face(face2_hull, FRAME)
 
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
-triang_image1, triangles1 = delaunay_triangulation(face1_hull, facial_landmarks[0], face1)
+triang_image, triangles_index1, triangles1 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], face1)
 #triang_image2, triangles2 = delaunay_triangulation(face2_hull, facial_landmarks[1], face2)
 
-landmarks_points = facial_landmarks[1].astype(int).tolist() # Face 2
-
+'''
 for triangle in triangles1:
 
     pt1 = tuple(landmarks_points[triangle[0]])
@@ -96,10 +95,8 @@ for triangle in triangles1:
     cv2.line(face2, pt1, pt2, (0, 0, 255), 1) # B
     cv2.line(face2, pt2, pt3, (0, 255, 0), 1) # G
     cv2.line(face2, pt3, pt1, (255, 0, 0), 1) # R
-
-cv2.imshow('delaunay1', triang_image1)
-
-cv2.imshow('delaunay2', face2)
+'''
+cv2.imshow('delaunay', triang_image)
 cv2.waitKey()
 
 
