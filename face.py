@@ -41,7 +41,8 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
     triang = np.array(triang, dtype=np.int32)
 
     triangles_index = [] # the numbers seens in landmark_numbers.png
-    triangles = []
+    triangles1 = []
+    triangles2 = []
 
     # For vizualisation
     for coordinate in triang:
@@ -79,9 +80,10 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         face1_triangle = [pt1, pt2, pt3]
         face2_triangle = [pt1_2, pt2_2, pt3_2]
 
-        print("1", face1_triangle)
-        print("2", face2_triangle)
+        triangles1.append(face1_triangle)
+        triangles2.append(face2_triangle)
 
+        '''
         cv2.line(image, pt1, pt2, (0, 0, 255), 1)
         cv2.line(image, pt2, pt3, (0, 255, 0), 1)
         cv2.line(image, pt3, pt1, (255, 0, 0), 1)
@@ -89,7 +91,8 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         cv2.line(image, pt1_2, pt2_2, (0, 0, 255), 1)
         cv2.line(image, pt2_2, pt3_2, (0, 255, 0), 1)
         cv2.line(image, pt3_2, pt1_2, (255, 0, 0), 1)
+        '''
 
     #print(triangles)
-    return image, triangles_index, triangles
+    return image, triangles_index, triangles1, triangles2
 
