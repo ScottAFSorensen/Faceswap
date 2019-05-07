@@ -37,13 +37,14 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
     subdiv = cv2.Subdiv2D(bounding_box)
     subdiv.insert(face1_landmarks_list)
 
+    # split face into triangles
     triang = subdiv.getTriangleList()
     triang = np.array(triang, dtype=np.int32)
 
     triangles_index = [] # the numbers seens in landmark_numbers.png
-    triangles = []
+    triangles1 = [] # list of the triangles in face1
+    triangles2 = [] # list of the triangles in face2
 
-    # For vizualisation
     for coordinate in triang:
         pt1 = (coordinate[0], coordinate[1])
         pt2 = (coordinate[2], coordinate[3])
@@ -69,19 +70,20 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         index3 = index3[0] 
 
         triangle_index = [index1, index2, index3]
-        triangles_index.append(triangle_index)
+        triangles_index.append(triangle_index) # remove later? do we need this list?
 
-        pt1_2 = tuple(face2_landmarks_list[index1]) # Corresponding triangle in second face
+        # Corresponding triangle in second face
+        pt1_2 = tuple(face2_landmarks_list[index1]) 
         pt2_2 = tuple(face2_landmarks_list[index2]) 
         pt3_2 = tuple(face2_landmarks_list[index3])
+        
+        # create list of the triangles
+        face1_triangle = [pt1, pt2, pt3] 
+        face2_triangle = [pt1_2, pt2_2, pt3_2]
+        triangles1.append(face1_triangle) 
+        triangles2.append(face2_triangle)
 
         
-        face1_triangle = [pt1, pt2, pt3]
-        face2_triangle = [pt1_2, pt2_2, pt3_2]
-
-        print("1", face1_triangle)
-        print("2", face2_triangle)
-
         cv2.line(image, pt1, pt2, (0, 0, 255), 1)
         cv2.line(image, pt2, pt3, (0, 255, 0), 1)
         cv2.line(image, pt3, pt1, (255, 0, 0), 1)
@@ -89,7 +91,8 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         cv2.line(image, pt1_2, pt2_2, (0, 0, 255), 1)
         cv2.line(image, pt2_2, pt3_2, (0, 255, 0), 1)
         cv2.line(image, pt3_2, pt1_2, (255, 0, 0), 1)
+        
 
     #print(triangles)
-    return image, triangles_index, triangles
+    return image, triangles_index, triangles1, triangles2
 
