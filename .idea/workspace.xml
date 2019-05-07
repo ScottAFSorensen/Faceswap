@@ -4,7 +4,6 @@
     <list default="true" id="285c12e9-7afd-4d05-b78a-c2f310d1b373" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/affine_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/affine_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +28,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/affine_trans.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-82">
+            <state relative-caret-position="364">
               <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
               <folding>
                 <element signature="e#23#33#0" expanded="true" />
@@ -171,7 +170,21 @@
       <option name="project" value="LOCAL" />
       <updated>1557143738946</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="added affine transform draft one method">
+      <created>1557222430862</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1557222430863</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added affine transform draft one method, made it so you use it from outside">
+      <created>1557223118352</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1557223118352</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -220,7 +233,9 @@
     <MESSAGE value="Changed comments to pip8 standard in main" />
     <MESSAGE value="new rect in subdiv" />
     <MESSAGE value="home made images to train on" />
-    <option name="LAST_COMMIT_MESSAGE" value="home made images to train on" />
+    <MESSAGE value="added affine transform draft one method" />
+    <MESSAGE value="added affine transform draft one method, made it so you use it from outside" />
+    <option name="LAST_COMMIT_MESSAGE" value="added affine transform draft one method, made it so you use it from outside" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/convex.py">
@@ -252,7 +267,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/affine_trans.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-82">
+        <state relative-caret-position="364">
           <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="e#23#33#0" expanded="true" />
