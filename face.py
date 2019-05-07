@@ -49,8 +49,6 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         pt2 = (coordinate[2], coordinate[3])
         pt3 = (coordinate[4], coordinate[5])
 
-        original_triangle = [pt1, pt2, pt3]
-
         # index chaos but it works :)
         index1 = np.where((face1_landmarks == pt1).all(axis=1))
         index1 = index1[0]
@@ -78,9 +76,11 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         pt3_2 = tuple(face2_landmarks_list[index3])
 
         
-        triangle = [pt1_2, pt2_2, pt3_2]
-        print("1", original_triangle)
-        print("2", triangle)
+        face1_triangle = [pt1, pt2, pt3]
+        face2_triangle = [pt1_2, pt2_2, pt3_2]
+
+        print("1", face1_triangle)
+        print("2", face2_triangle)
 
         cv2.line(image, pt1, pt2, (0, 0, 255), 1)
         cv2.line(image, pt2, pt3, (0, 255, 0), 1)

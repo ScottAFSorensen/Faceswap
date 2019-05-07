@@ -13,8 +13,8 @@ detector = dlib.get_frontal_face_detector() # face detector
 # Using pre-trained model to detect facial landmarks
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
-FRAME = train_image #None # single frame taken from video
-'''
+FRAME = None # single frame taken from video
+
 while(True):
     
     ret, frame = cap.read()        
@@ -29,7 +29,6 @@ while(True):
         break
         
 cv2.destroyAllWindows() # close video
-'''
 
 # ----------------get facial landmarks-----------------------
 # Should be the length of predictor, can change it later
@@ -80,21 +79,11 @@ face2_mask, face2 = extract_face(face2_hull, FRAME)
 #cv2.imshow('mask2', face2_mask)
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
-triang_image, triangles_index1, triangles1 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], face1)
-#triang_image2, triangles2 = delaunay_triangulation(face2_hull, facial_landmarks[1], face2)
+triang_image1 = delaunay_triangulation(face1_hull, facial_landmarks[0], face1)
+triang_image2 = delaunay_triangulation(face2_hull, facial_landmarks[1], face2)
 
-'''
-for triangle in triangles1:
-
-    pt1 = tuple(landmarks_points[triangle[0]])
-    pt2 = tuple(landmarks_points[triangle[1]])
-    pt3 = tuple(landmarks_points[triangle[2]])
-
-    cv2.line(face2, pt1, pt2, (0, 0, 255), 1) # B
-    cv2.line(face2, pt2, pt3, (0, 255, 0), 1) # G
-    cv2.line(face2, pt3, pt1, (255, 0, 0), 1) # R
-'''
-cv2.imshow('delaunay', triang_image)
+cv2.imshow('delaunay1', triang_image1)
+cv2.imshow('delaunay2', triang_image2)
 cv2.waitKey()
 
 
