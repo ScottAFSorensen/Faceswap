@@ -38,21 +38,13 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image):
     img1_within_boundary = orig_img[y_1:y_1 + h_1, x_1:x_1 + w_1]
     size_bounds_triangle_2 = (w_2, h_2)
 
-    transformed_area = get_affine(img1_within_boundary, offset_triangle_1, offset_triangle_2,
-                                            size_bounds_triangle_2)
-
+    transformed_area = get_affine(img1_within_boundary, offset_triangle_1, offset_triangle_2, size_bounds_triangle_2)
     # remove all parts of the transformed image outside the area we care about (triangle mask)
     transformed_triangle_only = transformed_area * mask
 
+    # Combine below into 1 line.
     # slice the current area out of the in the image we are mapping the face to
     morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)
     # slice the transformed area back in its place
     morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] + transformed_triangle_only
-
     return morphed_image
-
-def affine_trans(triang, hull1, hull2, ref_image, FRAME):
-
-
-    for tri_1, tri_2 in triang:
-        morph_affine(tri_1, tri_2, ref_image, FRAME)
