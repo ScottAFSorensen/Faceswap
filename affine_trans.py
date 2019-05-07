@@ -13,7 +13,7 @@ def get_affine(src, src_tri, dest_tri, size):
     return dst
 
 
-def morph_affine(tri_1, tri_2, orig_img, morphed_image = None):
+def morph_affine(tri_1, tri_2, orig_img, morphed_image):
     x_1, y_1, w_1, h_1 = cv2.boundingRect(np.float32([tri_1]))
     x_2, y_2, w_2, h_2 = cv2.boundingRect(np.float32([tri_2]))
 
@@ -44,7 +44,7 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image = None):
 
     # Combine below into 1 line.
     # slice the current area out of the in the image we are mapping the face to
-    orig_img[y_2:y_2 + h_2, x_2:x_2 + w_2] = orig_img[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)
+    morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)
     # slice the transformed area back in its place
-    orig_img[y_2:y_2 + h_2, x_2:x_2 + w_2] = orig_img[y_2:y_2 + h_2, x_2:x_2 + w_2] + transformed_triangle_only
-    return orig_img
+    morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] + transformed_triangle_only
+    return morphed_image

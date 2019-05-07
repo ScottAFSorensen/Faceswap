@@ -95,7 +95,7 @@ FRAME_copy = np.copy(FRAME)
 cv2.waitKey()
 cv2.imshow('before affine', FRAME_copy)
 for i in range(len(triangles1)):
-    morph_affine(triangles1[i], triangles2[i], FRAME_copy)
+    morph_affine(triangles1[i], triangles2[i], FRAME, FRAME_copy)
 
 cv2.imshow('mmmm', FRAME_copy)
 cv2.waitKey()
