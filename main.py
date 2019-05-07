@@ -3,6 +3,7 @@ import numpy as np
 import dlib
 from convex import get_hull
 from face import extract_face, delaunay_triangulation
+from affine_trans import affine_trans
  
 # cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 cap = cv2.VideoCapture(0)
@@ -14,6 +15,7 @@ detector = dlib.get_frontal_face_detector() # face detector
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 FRAME = train_image #None # single frame taken from video
+ref_image = np.copy(FRAME)
 '''
 while(True):
     
@@ -85,8 +87,8 @@ triang_image1, triangles1 = delaunay_triangulation(face1_hull, facial_landmarks[
 
 landmarks_points = facial_landmarks[1].astype(int).tolist() # Face 2
 
+# Just to show the image itself.
 for triangle in triangles1:
-
     pt1 = tuple(landmarks_points[triangle[0]])
     pt2 = tuple(landmarks_points[triangle[1]])
     pt3 = tuple(landmarks_points[triangle[2]])
@@ -96,13 +98,13 @@ for triangle in triangles1:
     cv2.line(face2, pt3, pt1, (255, 0, 0), 1) # R
 
 cv2.imshow('delaunay1', triang_image1)
-cv2.imshow('delaunay2', triang_image2)
+cv2.imshow('delaunay2', face2)
 cv2.waitKey()
 
 
 # --------------------Affine transform----------------------------------------------
-FRAME = apply_affine_transformation(triang_image1, face1_hull, face2_hull, ref_image, FRAME)
-FRAME = apply_affine_transformation(triang_image2, face2_hull, face1_hull, ref_image, FRAME)
+FRAME = affine_trans(triang_image1, face1_hull, face2_hull, ref_image, FRAME)
+# FRAME = apply_affine_transformation(triang_image2, face2_hull, face1_hull, ref_image, FRAME)
 
 # swap_1 = merge_mask_with_image(hull_2, img_1_face_to_img_2, img_2)
 
