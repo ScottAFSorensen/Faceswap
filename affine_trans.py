@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 import cv2
 import numpy as np
 
@@ -30,7 +30,6 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image):
         offset_triangle_2.append(((coords[0] - x_2), (coords[1] - y_2)))
 
     mask = np.zeros((h_2, w_2, 3))
-    cv2.imshow('mask image', mask)
     cv2.fillConvexPoly(mask, np.int32(offset_triangle_2), (1.0, 1.0, 1.0))
 
     # Get the part we are mapping

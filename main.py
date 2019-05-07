@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import cv2
 import numpy as np
 import dlib
@@ -5,8 +6,7 @@ from convex import get_hull
 from face import extract_face, delaunay_triangulation
 from affine_trans import morph_affine
  
-# cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 train_image = cv2.imread('train_image.jpg')
 
 # Using already existing library for face detector and finding facial landmarks.
@@ -26,8 +26,7 @@ while(True):
         break
 
     if cv2.waitKey(25) & 0xFF == ord(' '):  # Spacebar, take image from video
-        FRAME = train_image
-        ref_image = np.copy(FRAME)
+        FRAME = frame
         break
         
 cv2.destroyAllWindows() # close video
@@ -56,14 +55,10 @@ for m in range(0, n_faces):
 
         x = landmarks.part(n).x
         y = landmarks.part(n).y
-        # cv2.circle(FRAME, (x, y), 4, (0, 0, 255), -1) #visualize landmarks, BGR
+        #cv2.circle(FRAME, (x, y), 4, (0, 0, 255), -1) #visualize landmarks, BGR
 
         facial_landmarks[m, n-marker_start] = (x,y)
-
-        # cv2.putText(FRAME,str(n),(x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(0,255,255),2,cv2.LINE_AA) # show marker number
     
-#cv2.imshow('Frame', FRAME)
-#cv2.waitKey()
 
 # ----------------------Convex hull (convex.py)------------------------------------------
 
@@ -97,7 +92,7 @@ cv2.imshow('before affine', FRAME_copy)
 for i in range(len(triangles1)):
     morph_affine(triangles1[i], triangles2[i], FRAME, FRAME_copy)
 
-cv2.imshow('mMmmmM', FRAME_copy)
+cv2.imshow('after affine', FRAME_copy)
 cv2.waitKey()
 
 

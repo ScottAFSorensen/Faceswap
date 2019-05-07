@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import numpy as np
 
 # Using convex hull to extract the face using the facial landmarks
