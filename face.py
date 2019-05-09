@@ -22,13 +22,17 @@ def extract_face(convex_hull, image):
     return mask, face_region
 
 
-def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image):
+def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image, debug = False):
     '''
     :param convex_hull:     Convex hull of the first face
     :param face1_landmarks: Facial landmarks for the first face
     :param face2_landmarks: Facial landmarks for the second face
     :param image:           Image to draw the delaunay triangulation on, remove this param later maybe?
+    :param debug:           Boolean to determine if debug is on, draws the delaunay triangles of the image if yes
     '''
+    image_copy = None
+    if debug:
+        image_copy = np.copy(image)
 
     face1_landmarks_list = face1_landmarks.astype(int).tolist()
     face2_landmarks_list = face2_landmarks.astype(int).tolist()
@@ -84,16 +88,17 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         triangles1.append(face1_triangle) 
         triangles2.append(face2_triangle)
 
-        
-        cv2.line(image, pt1, pt2, (0, 0, 255), 1)
-        cv2.line(image, pt2, pt3, (0, 255, 0), 1)
-        cv2.line(image, pt3, pt1, (255, 0, 0), 1)
+        if debug:
+            cv2.line(image_copy, pt1, pt2, (0, 0, 255), 1)
+            cv2.line(image_copy, pt2, pt3, (0, 255, 0), 1)
+            cv2.line(image_copy, pt3, pt1, (255, 0, 0), 1)
 
-        cv2.line(image, pt1_2, pt2_2, (0, 0, 255), 1)
-        cv2.line(image, pt2_2, pt3_2, (0, 255, 0), 1)
-        cv2.line(image, pt3_2, pt1_2, (255, 0, 0), 1)
-        
+            cv2.line(image_copy, pt1_2, pt2_2, (0, 0, 255), 1)
+            cv2.line(image_copy, pt2_2, pt3_2, (0, 255, 0), 1)
+            cv2.line(image_copy, pt3_2, pt1_2, (255, 0, 0), 1)
 
-    #print(triangles)
-    return image, triangles_index, triangles1, triangles2
+    if debug:
+        cv2.imshow('Image with triangles', image_copy)
+        cv2.waitKey()
+    return [triangles1, triangles2]
 

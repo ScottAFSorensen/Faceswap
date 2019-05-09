@@ -10,11 +10,13 @@ cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 train_image = cv2.imread('train_image.jpg')
 
 # Using already existing library for face detector and finding facial landmarks.
-detector = dlib.get_frontal_face_detector() # face detector
+detector = dlib.get_frontal_face_detector()  # face detector
 # Using pre-trained model to detect facial landmarks
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+debug = True
 
-FRAME = train_image #None # single frame taken from video
+FRAME = train_image  # image used while writing the code
+# FRAME = None
 
 '''
 while(True):
@@ -55,9 +57,9 @@ for m in range(0, n_faces):
 
         x = landmarks.part(n).x
         y = landmarks.part(n).y
-        #cv2.circle(FRAME, (x, y), 4, (0, 0, 255), -1) #visualize landmarks, BGR
+        # cv2.circle(FRAME, (x, y), 4, (0, 0, 255), -1) #visualize landmarks, BGR
 
-        facial_landmarks[m, n-marker_start] = (x,y)
+        facial_landmarks[m, n-marker_start] = (x, y)
     
 
 # ----------------------Convex hull (convex.py)------------------------------------------
@@ -65,7 +67,6 @@ for m in range(0, n_faces):
 # Finds the convex hull of the faces, based on out own convex hull algorithm, (style of jarvis match)
 face1_hull = get_hull(facial_landmarks[0])
 face2_hull = get_hull(facial_landmarks[1])
-
 
 # ---------------------Extract face and mask (crop.py)---------------------------------------
 
@@ -77,23 +78,27 @@ face2_mask, face2 = extract_face(face2_hull, FRAME)
 #cv2.imshow('mask2', face2_mask)
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
-triang_image, triangles_index1, triangles1, triangles2 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], face1)
-#triang_image2, triangles2 = delaunay_triangulation(face2_hull, facial_landmarks[1], face2)
-
-
-#cv2.imshow('delaunay', triang_image)
-#cv2.waitKey()
+tri_face1_in_face2 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], FRAME, debug)
+tri_face2_in_face1 = delaunay_triangulation(face2_hull, facial_landmarks[1], facial_landmarks[0], FRAME, debug)
 
 # --------------------Affine transform----------------------------------------------
 
-FRAME_copy = np.copy(FRAME)
-cv2.waitKey()
-cv2.imshow('before affine', FRAME_copy)
-for i in range(len(triangles1)):
-    morph_affine(triangles1[i], triangles2[i], FRAME, FRAME_copy)
+swapped = np.copy(FRAME)
+if debug:
+    cv2.waitKey()
+    cv2.imshow('before affine transform and swapping', swapped)
 
-cv2.imshow('after affine', FRAME_copy)
-cv2.waitKey()
+for i in range(len(tri_face1_in_face2[0])):
+    morph_affine(tri_face1_in_face2[0][i], tri_face1_in_face2[1][i], FRAME, swapped)
+
+for i in range(len(tri_face2_in_face1[0])):
+    morph_affine(tri_face2_in_face1[0][i], tri_face2_in_face1[1][i], FRAME, swapped)
+
+if debug:
+    cv2.imshow('after affine transform and swapping', swapped)
+    cv2.waitKey()
+
+
 
 
 #FRAME = morph_affine(triang_image)
