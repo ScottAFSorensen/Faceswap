@@ -27,7 +27,12 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
     :param convex_hull:     Convex hull of the first face
     :param face1_landmarks: Facial landmarks for the first face
     :param face2_landmarks: Facial landmarks for the second face
-    :param image:           Image to draw the delaunay triangulation on, remove this param later maybe?
+    :param image:           Image to draw the delaunay triangulation on
+
+    :return image:          Image with the triangles drawn on, used for visual debugging
+    :return triangles1:     List with all the triangles in face1 as pixel coordinates
+    :return triangles2:     List with all the triangles in face2 as pixel coordinates
+
     '''
 
     face1_landmarks_list = face1_landmarks.astype(int).tolist()
@@ -95,5 +100,27 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image)
         
 
     #print(triangles)
-    return image, triangles_index, triangles1, triangles2
+    return image, triangles1, triangles2
 
+
+def laplace_blend(image, swapped_image, mask1, mask2):
+    '''
+    :param image:           Original image from camera
+    :param swapped_image:   Image with swapped faces
+    :param mask1:           Mask for face1
+    :param mask2:           Mask for face2
+
+    :return blended_image:
+    '''
+    
+    kernel_size = 5
+    mask = mask1 + mask2 # image with both masks
+    f_mask = 255 - mask # flipped mask.
+
+    kernel = np.ones((kernel_size, kernel_size),np.float32)/kernel_size*kernel_size
+
+    #dst = cv2.filter2D(img,-1,kernel)
+    
+    
+    cv2.imshow('mask', f_mask)
+    cv2.waitKey()

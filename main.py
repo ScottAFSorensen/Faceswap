@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import dlib
 from convex import get_hull
-from face import extract_face, delaunay_triangulation
+from face import extract_face, delaunay_triangulation, laplace_blend
 from affine_trans import morph_affine
  
 cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
@@ -77,7 +77,7 @@ face2_mask, face2 = extract_face(face2_hull, FRAME)
 #cv2.imshow('mask2', face2_mask)
 # --------------------- Trying to find the delauney triangulation, using packages ------------------------
 
-triang_image, triangles_index1, triangles1, triangles2 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], face1)
+triang_image, triangles1, triangles2 = delaunay_triangulation(face1_hull, facial_landmarks[0], facial_landmarks[1], face1)
 #triang_image2, triangles2 = delaunay_triangulation(face2_hull, facial_landmarks[1], face2)
 
 
@@ -87,13 +87,13 @@ triang_image, triangles_index1, triangles1, triangles2 = delaunay_triangulation(
 # --------------------Affine transform----------------------------------------------
 
 FRAME_copy = np.copy(FRAME)
-cv2.waitKey()
-cv2.imshow('before affine', FRAME_copy)
+#cv2.waitKey()
+#cv2.imshow('before affine', FRAME_copy)
 for i in range(len(triangles1)):
     morph_affine(triangles1[i], triangles2[i], FRAME, FRAME_copy)
 
-cv2.imshow('after affine', FRAME_copy)
-cv2.waitKey()
+#cv2.imshow('after affine', FRAME_copy)
+#cv2.waitKey()
 
 
 #FRAME = morph_affine(triang_image)
@@ -107,3 +107,5 @@ cv2.waitKey()
 # -------------------- Seamless cloning easy and short -----------------
 # new_image = cv2.seamlessClone(src, dest, mask, center, cv2.MIXED_CLONE)
 
+
+laplace_blend(FRAME, FRAME_copy, face1_mask, face2_mask) 
