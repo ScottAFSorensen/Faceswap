@@ -43,6 +43,9 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image):
     shape2 = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2].shape
     # Combine below into 1 line.
     # slice the current area out of the in the image we are mapping the face to
+
+    # Have to make sure they are the same shape, sometimes they are not.
+    # Unsure why they are not
     if shape1 != shape2:
         return morphed_image
     morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)
