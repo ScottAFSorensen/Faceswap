@@ -35,6 +35,7 @@ def swap_faces(FRAME):
 
     for m in range(0, n_faces):
         landmarks = predictor(gray, faces[m])  # dlib
+
         for n in range(marker_start, marker_end):
             x = landmarks.part(n).x
             y = landmarks.part(n).y
@@ -81,10 +82,21 @@ def swap_faces(FRAME):
         cv2.waitKey()
 
 
-    swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask)
+    # --------------------- Blur face edge ----------------------------
+
+    # Figure out blur amount:
+
+    # Use facials landmarks 0 and 16, see landmark_numbers.png
+    width_face1 = abs(facial_landmarks[0][16][0] - facial_landmarks[0][0][0]) # width of face in pixels in horizontal direction.
+    width_face2 = abs(facial_landmarks[1][16][0] - facial_landmarks[1][0][0])
+    blur_size = int(((width_face1 + width_face2)/2)*0.5)
+    if blur_size % 2 == 0:
+        blur_size += 1
+
+    swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask, blur_size)
+    
 
     return swapp
-
 
 
 FRAME = train_image
@@ -94,9 +106,10 @@ faces = detector(gray)  # dlib
 
 swapped = swap_faces(FRAME)
 
-
+'''
 # Color correcting
 blur_amount = 301
+
 im1_blur = cv2.GaussianBlur(FRAME, (blur_amount, blur_amount), 0)
 im2_blur = cv2.GaussianBlur(swapped, (blur_amount, blur_amount), 0)
 
@@ -104,10 +117,11 @@ im2_blur = cv2.GaussianBlur(swapped, (blur_amount, blur_amount), 0)
 im2_blur += 128 * (im2_blur <= 1.0)
 
 new_img = (swapped.astype(np.float64) * im1_blur.astype(np.float64) / im2_blur.astype(np.float64))
+'''
 
 cv2.imshow('input', FRAME)
 cv2.imshow('output', swapped)
-cv2.imshow('color', new_img)
+#cv2.imshow('color', new_img)
 cv2.waitKey()
 
 
