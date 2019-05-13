@@ -4,6 +4,7 @@ import cv2
 import math
 
 
+
 def extract_face(convex_hull, image): 
     
     mask = np.zeros((image.shape[0], image.shape[1])) # gray level image
@@ -118,106 +119,77 @@ def laplace_blend(image, swapped_image, mask1, mask2):
     :return blended_image:
     '''
 
+    k_size = 101 # kernel size for gaussian blur
+    # Does not take face size into consideration, maye make it adaptive?
+
     mask = mask1 + mask2 # image with both masks
     mask = cv2.cvtColor(mask,cv2.COLOR_GRAY2BGR) # turn mask to color image so shapes matches
+    mask = cv2.GaussianBlur(mask ,(k_size,k_size),0) # gaussian of mask
 
-    mask_f = 255 - mask # flipped mask.
+    # needed to divide by 255 to normalize the values because cv2 is a bitch
+    image = image.astype(float) / 255 
+    swapped_image = swapped_image.astype(float) / 255 
+    mask = mask.astype(float) / 255
 
-    k = 10 # parameter for kernel size, have to find optimal value
-    depth = 5 # depth of the pyramid
+    mask_f = 1 - mask # flipped mask.
 
-    gauss_mask = gaussian_pyramid(mask, depth, k) # gaussian pyramid of mask
-    gauss_mask_f = gaussian_pyramid(mask_f, depth, k) # gaussian pyramid of flipped mask
+    # linear = mask*swapped_image + mask_f*image # simple linear blending
+   
+    depth = 5 # depth of the pyramids
+    gauss_pyr_mask = gaussian_pyramid(mask, depth) # gaussian pyramid of mask
+    gauss_pyr_mask_f = gaussian_pyramid(mask_f, depth) # gaussian pyramid of flipped mask
 
-    gauss_original = gaussian_pyramid(image, depth, k)
-    gauss_swapped = gaussian_pyramid(swapped_image, depth, k)
-    lap_pyr_original = laplace_pyramid(gauss_original, k) # Laplace pyramid of original image
-    lap_pyr_swapped = laplace_pyramid(gauss_swapped, k) # Laplace pyramid of swapped faces image
+    gauss_pyr_swap = gaussian_pyramid(swapped_image, depth) 
+    laplace_pyr_swap = laplace_pyramid(gauss_pyr_swap) # laplace pyramid of face swapped image
+    
+    gauss_pyr_orig = gaussian_pyramid(image, depth) 
+    laplace_pyr_orig = laplace_pyramid(gauss_pyr_orig) # laplace pyramid of original image
+
 
     blended_pyr = []
-
-    for i in range(len(gauss_mask)): 
-        cv2.imshow('mask', gauss_mask[i])
-        cv2.imshow('mask flipped', gauss_mask_f[i])
-        cv2.imshow('lap_pyr_swapped[i]', lap_pyr_swapped[i])
-        cv2.imshow('lap_pyr_original[i]', lap_pyr_original[i])
-
-        cv2.waitKey()
-        blended_pyr.append( gauss_mask[i]*lap_pyr_swapped[i] + gauss_mask_f[i]*lap_pyr_original[i] )# create the blended pyramid
     
-
-    output = blended_pyr[len(blended_pyr)-1]
+    for i in range(5): 
+        blended_pyr.append( gauss_pyr_mask[i]*laplace_pyr_swap[4-i] + gauss_pyr_mask_f[i]*laplace_pyr_orig[4-i])# create the blended pyramid
+    
+    
+    output = blended_pyr[depth-1]
     for i in range(len(blended_pyr)-1, 0, -1):
-        expanded = up2(output, k)
-
+        expanded = cv2.pyrUp(output)
         output = expanded + blended_pyr[i - 1]
 
-    cv2.imshow('blended', output)
-    cv2.waitKey()
-
-
-def down2(image, k):
+    return output
+    
+    
+def gaussian_pyramid(image, depth):
     '''
     Used in laplace_blend()
-    Blur and create image half the size.
-    '''
-
-    k_size = math.ceil((image.shape[0]/k)/ 2.)*2 + 1 # kernel size, make sure it's always a odd number
-    gaussian_image = cv2.GaussianBlur(image ,(k_size,k_size),0) # gaussian of mask
-
-    reduced = gaussian_image[::2, ::2] # downsample by 2
-
-    return reduced
-
-def up2(image, k):
-    '''
-    Used in laplace_blend()
-    Create image twice as big
-    '''
-
-    upscaled = np.zeros((2*image.shape[0], 2*image.shape[1], 3)) # twice as big image
-    upscaled[::2, ::2, :] = image
-
-    upscaled = cv2.resize(image, (0,0), fx=2, fy=2) 
-
-    cv2.imshow('up2', upscaled)
-    cv2.waitKey()
-
-    k_size = math.ceil((image.shape[0]/k)/ 2.)*2 + 1 
-    gaussian_image = cv2.GaussianBlur(upscaled ,(k_size,k_size),0)
-
-    upscaled = gaussian_image * 4 # multiplying the height and width by 2
-
-    return upscaled
-
-
-def gaussian_pyramid(image, depth, k):
-    '''
-    Used in laplace_blend()
-    Using the down2 function iteratively to build a pyramid
+    Using the pyrDown function iteratively to build a pyramid
     '''
 
     pyramid = [image]
 
-    for i in range(depth):
-        pyramid.append(down2(pyramid[i], k))
+    for i in range(5):
+        image = cv2.pyrDown(image)
+        pyramid.append(image)
 
     return pyramid
 
 
-def laplace_pyramid(gauss_pyr, k):
+def laplace_pyramid(gauss_pyr):
     '''
     Used in laplace_blend()
     Iterate the gaussian pyramid
     '''
 
-    pyramid = []
 
-    for i in range(len(gauss_pyr)-1):
-        upscaled = up2(gauss_pyr[i+1], k)
+    pyramid = [gauss_pyr[4]]
 
-        pyramid.append(gauss_pyr[i] - upscaled) # laplace image
-
-    pyramid.append(gauss_pyr[len(gauss_pyr)-1])
-
+    for i in range(4, 0, -1):
+        GE = cv2.pyrUp(gauss_pyr[i])
+        #print("1",GE.shape)
+        #print("2",gauss_pyr[i-1].shape)
+        laplace = cv2.subtract(gauss_pyr[i-1],GE)
+        pyramid.append(laplace)
+       
     return pyramid
+
