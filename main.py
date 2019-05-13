@@ -83,32 +83,49 @@ def swap_faces(FRAME):
 
     swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask)
 
+    # -------------------- color correcting ---------------------------------
+    # Color correcting
+    '''
+    blur_amount = 151
+
+    im1_blur = cv2.GaussianBlur(FRAME[face1_mask == 255], (blur_amount, blur_amount), 0)
+    im2_blur = cv2.GaussianBlur(swapped[face1_mask == 255], (blur_amount, blur_amount), 0)
+    # Avoid divide-by-zero errors.
+    im2_blur += 128 * (im2_blur <= 1.0)
+
+    new_img = np.copy(swapped)
+    new_img[face1_mask == 255] = (swapped[face1_mask].astype(np.float64) * im1_blur.astype(np.float64) / im2_blur.astype(np.float64))
+
+    cv2.imshow('img1_blur', im1_blur)
+    cv2.imshow('img2_blur', im2_blur)
+    cv2.imshow('input', FRAME)
+    cv2.imshow('output', swapped)
+    cv2.imshow('color', new_img)
+    cv2.waitKey()
+    '''
     return swapp
 
-
-
 FRAME = train_image
+while True:
+    swapped = None
+    gray = None
+    faces = None
+    ret, FRAME1 = cap.read()
+    # cv2.imshow('Video',frame)
 
-gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY)  # use detector on gray scale image
-faces = detector(gray)  # dlib
+    if cv2.waitKey(25) & 0xFF == ord('q'):  # Q to quit
+        break
 
-swapped = swap_faces(FRAME)
+    gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY)  # use detector on gray scale image
+    faces = detector(gray)  # dlib
 
+    if len(faces) >= 2:
+        swapped = swap_faces(FRAME)
+        cv2.imshow('Video', swapped)
+    else:
+        cv2.imshow('Video', FRAME)
 
-# Color correcting
-blur_amount = 301
-im1_blur = cv2.GaussianBlur(FRAME, (blur_amount, blur_amount), 0)
-im2_blur = cv2.GaussianBlur(swapped, (blur_amount, blur_amount), 0)
-
-# Avoid divide-by-zero errors.
-im2_blur += 128 * (im2_blur <= 1.0)
-
-new_img = (swapped.astype(np.float64) * im1_blur.astype(np.float64) / im2_blur.astype(np.float64))
-
-cv2.imshow('input', FRAME)
-cv2.imshow('output', swapped)
-cv2.imshow('color', new_img)
-cv2.waitKey()
+cv2.destroyAllWindows()  # close video
 
 
         
