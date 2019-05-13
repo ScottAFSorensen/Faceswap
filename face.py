@@ -128,6 +128,8 @@ def laplace_blend(image, swapped_image, mask1, mask2, k_size):
 	mask = mask1 + mask2 # image with both masks
 	mask = cv2.cvtColor(mask,cv2.COLOR_GRAY2BGR) # turn mask to color image so shapes matches
 	k_tmp = int(k_size/2)
+	if k_tmp % 2 == 0:
+		k_tmp += 1
 	mask_tmp = cv2.GaussianBlur(mask ,(k_tmp,k_tmp),0) # gaussian of mask
 	mask = cv2.GaussianBlur(mask ,(k_size,k_size),0) # gaussian of mask
 	

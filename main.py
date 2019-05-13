@@ -104,7 +104,7 @@ while True:
     swapped = None
     gray = None
     faces = None
-    ret, FRAME1 = cap.read()
+    ret, FRAME = cap.read()
     # cv2.imshow('Video',frame)
 
     if cv2.waitKey(25) & 0xFF == ord('q'):  # Q to quit
