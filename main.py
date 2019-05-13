@@ -43,13 +43,11 @@ def swap_faces(FRAME):
             facial_landmarks[m, n - marker_start] = (x, y)
 
     # ----------------------Convex hull (convex.py)------------------------------------------
-
     # Finds the convex hull of the faces, based on out own convex hull algorithm, (style of jarvis match)
     face1_hull = get_hull(facial_landmarks[0])
     face2_hull = get_hull(facial_landmarks[1])
 
     # ---------------------Extract face and mask (crop.py)---------------------------------------
-
     face1_mask, face1 = extract_face(face1_hull, FRAME)
     face2_mask, face2 = extract_face(face2_hull, FRAME)
 
@@ -80,37 +78,38 @@ def swap_faces(FRAME):
         cv2.imshow('after affine transform and swapping', swapp)
         cv2.waitKey()
 
-
     swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask)
 
-    # -------------------- color correcting ---------------------------------
-    # Color correcting
     '''
-    blur_amount = 151
+    # -------------------- color correcting  ( failed ) ---------------------------------
+    # Color correcting
+    blur_amount = 1001
+    new_img = np.copy(swapp)
 
-    im1_blur = cv2.GaussianBlur(FRAME[face1_mask == 255], (blur_amount, blur_amount), 0)
-    im2_blur = cv2.GaussianBlur(swapped[face1_mask == 255], (blur_amount, blur_amount), 0)
+    # on face 1
+    im1_blur = cv2.GaussianBlur(FRAME, (blur_amount, blur_amount), 0)
+    im2_blur = cv2.GaussianBlur(swapp, (blur_amount, blur_amount), 0)
     # Avoid divide-by-zero errors.
     im2_blur += 128 * (im2_blur <= 1.0)
+    new_img[face1_mask == 255] = (swapp[face1_mask == 255].astype(np.float64) * im1_blur[face1_mask == 255].astype(np.float64) / im2_blur[face1_mask == 255].astype(np.float64))
 
-    new_img = np.copy(swapped)
-    new_img[face1_mask == 255] = (swapped[face1_mask].astype(np.float64) * im1_blur.astype(np.float64) / im2_blur.astype(np.float64))
-
+   
     cv2.imshow('img1_blur', im1_blur)
     cv2.imshow('img2_blur', im2_blur)
     cv2.imshow('input', FRAME)
-    cv2.imshow('output', swapped)
+    cv2.imshow('output', swapp)
     cv2.imshow('color', new_img)
     cv2.waitKey()
     '''
+
     return swapp
 
-FRAME = train_image
+#FRAME = train_image
 while True:
     swapped = None
     gray = None
     faces = None
-    ret, FRAME1 = cap.read()
+    ret, FRAME = cap.read()
     # cv2.imshow('Video',frame)
 
     if cv2.waitKey(25) & 0xFF == ord('q'):  # Q to quit
