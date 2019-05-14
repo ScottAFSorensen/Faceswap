@@ -13,7 +13,7 @@ def get_affine(src, src_tri, dest_tri, size):
     return dst
 
 
-def morph_affine(tri_1, tri_2, orig_img, morphed_image):
+def morph_affine(tri_1, tri_2, orig_img, morphed_image, debug=False):
 
     x_1, y_1, w_1, h_1 = cv2.boundingRect(np.float32([tri_1]))
     x_2, y_2, w_2, h_2 = cv2.boundingRect(np.float32([tri_2]))
@@ -46,4 +46,7 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image):
 
     # slices tbe area we care about, adds the new face, and puts it back into where it belongs, back to mama
     morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = (morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)) + transformed_triangle_only
+    if debug:
+        cv2.imshow('Image during transformation', morphed_image)
+        cv2.waitKey()
     return morphed_image

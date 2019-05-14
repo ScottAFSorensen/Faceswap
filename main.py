@@ -14,7 +14,7 @@ train_image = cv2.imread('train_image.jpg')
 detector = dlib.get_frontal_face_detector()  # face detector
 # Using pre-trained model to detect facial landmarks
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-debug = True
+debug = False
 # ----------------get facial landmarks-----------------------
 # Should be the length of predictor, can change it later
 n_faces = 2
@@ -65,14 +65,14 @@ def swap_faces(FRAME, gray, faces):
 
     swapp = np.copy(FRAME)
     if debug:
-        cv2.waitKey()
         cv2.imshow('before affine transform and swapping', swapp)
+        cv2.waitKey()
 
     for i in range(len(tri_face1_in_face2[0])):
-        morph_affine(tri_face1_in_face2[0][i], tri_face1_in_face2[1][i], FRAME, swapp)
+        morph_affine(tri_face1_in_face2[0][i], tri_face1_in_face2[1][i], FRAME, swapp, debug)
 
     for i in range(len(tri_face2_in_face1[0])):
-        morph_affine(tri_face2_in_face1[0][i], tri_face2_in_face1[1][i], FRAME, swapp)
+        morph_affine(tri_face2_in_face1[0][i], tri_face2_in_face1[1][i], FRAME, swapp, debug)
 
     if debug:
         cv2.imshow('after affine transform and swapping', swapp)
@@ -89,8 +89,6 @@ def swap_faces(FRAME, gray, faces):
         blur_size += 1
 
     swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask, blur_size)
-    
-
     return swapp
 
 #FRAME = train_image
@@ -99,8 +97,6 @@ while True:
     gray = None
     faces = None
     ret, FRAME = cap.read()
-    # cv2.imshow('Video',frame)
-
     if cv2.waitKey(25) & 0xFF == ord('q'):  # Q to quit
         break
 
@@ -111,12 +107,18 @@ while True:
     cv2.resizeWindow('Video', 1600, 1600)
 
     if len(faces) >= 2:
-        swapped = swap_faces(FRAME, gray, faces)
-        cv2.imshow('Video', swapped)
+        if debug:
+            if cv2.waitKey(25) & 0xFF == ord(' '):  # Q to quit
+                swapped = swap_faces(FRAME, gray, faces)
+            else:
+                cv2.imshow('Video', FRAME)
+        else:
+            swapped = swap_faces(FRAME, gray, faces)
+            cv2.imshow('Video', swapped)
     else:
         cv2.imshow('Video', FRAME)
 
-    time.sleep(0.0)
+
 cv2.destroyAllWindows()  # close video
 
 
