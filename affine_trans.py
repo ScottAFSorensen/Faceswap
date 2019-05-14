@@ -17,7 +17,9 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image):
 
     x_1, y_1, w_1, h_1 = cv2.boundingRect(np.float32([tri_1]))
     x_2, y_2, w_2, h_2 = cv2.boundingRect(np.float32([tri_2]))
-    if -1 in [x_1, y_1, x_2, y_2]:
+    print("x1 is: {}, y1 is : {}, w_1 is: {}, h1 is {}".format(x_1, y_1, w_1, h_1))
+    print("x2 is: {}, y2 is : {}, w_2 is: {}, h2 is {}".format(x_2, y_2, w_2, h_2))
+    if any(n < 0 for n in [x_1, y_1, x_2, y_2]):
         return morphed_image
     # maybe i can just use a rotation rectangle instead of offset stuff ?
     # https://docs.opencv.org/3.1.0/dd/d49/tutorial_py_contour_features.html
@@ -40,6 +42,10 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image):
     transformed_area = get_affine(img1_within_boundary, offset_triangle_1, offset_triangle_2, size_bounds_triangle_2)
     # remove all parts of the transformed image outside the area we care about (triangle mask)
     transformed_triangle_only = transformed_area * mask
+    shape1 = mask.shape
+    shape2 = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2].shape
+    if shape1 != shape2:
+        return morphed_image
     # Combine below into 1 line.
     # slice the current area out of the in the image we are mapping the face to
     morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)

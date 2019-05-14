@@ -5,7 +5,9 @@ import dlib
 from convex import get_hull
 from face import extract_face, delaunay_triangulation, laplace_blend
 from affine_trans import morph_affine
- 
+import time
+import concurrent.futures
+
 cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 train_image = cv2.imread('train_image.jpg')
 # Using already existing library for face detector and finding facial landmarks.
@@ -77,9 +79,6 @@ def swap_faces(FRAME):
     if debug:
         cv2.imshow('after affine transform and swapping', swapp)
         cv2.waitKey()
-
-    swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask)
-
     # --------------------- Blur face edge ----------------------------
 
     # Figure out blur amount:
@@ -110,12 +109,16 @@ while True:
     gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY)  # use detector on gray scale image
     faces = detector(gray)  # dlib
 
+    cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
+    cv2.resizeWindow('Video', 1600, 1600)
+
     if len(faces) >= 2:
         swapped = swap_faces(FRAME)
         cv2.imshow('Video', swapped)
     else:
         cv2.imshow('Video', FRAME)
 
+    time.sleep(0.0)
 cv2.destroyAllWindows()  # close video
 
 
