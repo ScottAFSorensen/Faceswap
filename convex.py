@@ -5,6 +5,7 @@ import numpy as np
 # References is this page https://algorithmtutor.com/Computational-Geometry/Convex-Hull-Algorithms-Jarvis-s-March/
 # We are using the jarvis's march as described in this page.
 
+
 # 0 --> p, q and r are colinear
 # 1 --> Clockwise
 # 2 --> Counterclockwise
@@ -15,8 +16,10 @@ def get_orientation(origin, p1, p2):
         return 0
     return 1 if val > 0 else 2
 
+
 def get_dist(p1, p2):
     return np.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
+
 
 def get_hull(points):
     points = points.tolist()
@@ -34,10 +37,7 @@ def get_hull(points):
     q = None
     l = leftmost
     while q is not leftmost:
-
         for point in points:
-            if point is l:
-                continue
             q = point
             break
 
@@ -50,6 +50,7 @@ def get_hull(points):
                 q = i
         hull.append(q)
         l = q
+        points.remove(q)
 
     return np.asarray(hull).astype(int)
 

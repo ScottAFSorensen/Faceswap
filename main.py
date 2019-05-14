@@ -14,7 +14,7 @@ train_image = cv2.imread('train_image.jpg')
 detector = dlib.get_frontal_face_detector()  # face detector
 # Using pre-trained model to detect facial landmarks
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-debug = False
+debug = True
 # ----------------get facial landmarks-----------------------
 # Should be the length of predictor, can change it later
 n_faces = 2
@@ -30,10 +30,8 @@ n_markers = marker_end - marker_start
 # FRAME = None
 
 
-def swap_faces(FRAME):
+def swap_faces(FRAME, gray, faces):
     facial_landmarks = np.zeros((n_faces, n_markers, 2))  # create mat
-    gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY)  # use detector on gray scale image
-    faces = detector(gray)  # dlib
 
     for m in range(0, n_faces):
         landmarks = predictor(gray, faces[m])  # dlib
@@ -113,7 +111,7 @@ while True:
     cv2.resizeWindow('Video', 1600, 1600)
 
     if len(faces) >= 2:
-        swapped = swap_faces(FRAME)
+        swapped = swap_faces(FRAME, gray, faces)
         cv2.imshow('Video', swapped)
     else:
         cv2.imshow('Video', FRAME)
