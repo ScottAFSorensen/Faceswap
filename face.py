@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 import math
 
-
 def extract_face(convex_hull, image): 
 	'''
 	:param convex_hull:     Convex hull of the face
@@ -56,7 +55,6 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image,
 	triang = subdiv.getTriangleList()
 	triang = np.array(triang, dtype=np.int32)
 
-	triangles_index = [] # the numbers seens in landmark_numbers.png
 	triangles1 = [] # list of the triangles in face1
 	triangles2 = [] # list of the triangles in face2
 
@@ -83,9 +81,6 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image,
 		if len(index3) == 0: 
 			continue
 		index3 = index3[0] 
-
-		triangle_index = [index1, index2, index3]
-		triangles_index.append(triangle_index) # remove later? do we need this list?
 
 		# Corresponding triangle in second face
 		pt1_2 = tuple(face2_landmarks_list[index1]) 
@@ -127,23 +122,16 @@ def laplace_blend(image, swapped_image, mask1, mask2, k_size):
 
 	mask = mask1 + mask2 # image with both masks
 	mask = cv2.cvtColor(mask,cv2.COLOR_GRAY2BGR) # turn mask to color image so shapes matches
-	k_tmp = int(k_size/2)
-	if k_tmp % 2 == 0:
-		k_tmp += 1
-	mask_tmp = cv2.GaussianBlur(mask ,(k_tmp,k_tmp),0) # gaussian of mask
 	mask = cv2.GaussianBlur(mask ,(k_size,k_size),0) # gaussian of mask
 	
-	# needed to divide by 255 to normalize the values because cv2 is a bitch
+	# needed to divide by 255 to normalize the values because cv2 is stupid
 	image = image.astype(float) / 255 
 	swapped_image = swapped_image.astype(float) / 255 
 	mask = mask.astype(float) / 255
-	mask_tmp = mask_tmp.astype(float) / 255
-
-	swapped_image = swapped_image * mask_tmp
 
 	mask_f = 1 - mask # flipped mask.
 	
-	#linear_blend = mask*swapped_image + mask_f*image # simple linear blending
+	# linear_blend = mask*swapped_image + mask_f*image # simple linear blending
    
 	depth = 5 # depth of the pyramids
 	gauss_pyr_mask = gaussian_pyramid(mask, depth) # gaussian pyramid of mask
@@ -155,12 +143,10 @@ def laplace_blend(image, swapped_image, mask1, mask2, k_size):
 	gauss_pyr_orig = gaussian_pyramid(image, depth) 
 	laplace_pyr_orig = laplace_pyramid(gauss_pyr_orig) # laplace pyramid of original image
 
-
 	# blend according to mask in each level
-
 	blended_pyr = []
-	for i in range(5):
-		blended_pyr.append( gauss_pyr_mask[i]*laplace_pyr_swap[4-i] + gauss_pyr_mask_f[i]*laplace_pyr_orig[4-i])# create the blended pyramid
+	for i in range(depth):
+		blended_pyr.append( gauss_pyr_mask[i]*laplace_pyr_swap[depth-1-i] + gauss_pyr_mask_f[i]*laplace_pyr_orig[depth-1-i])# create the blended pyramid
 	
 	# collapse pyramid
 	output = blended_pyr[depth-1]
@@ -178,7 +164,7 @@ def gaussian_pyramid(image, depth):
 
 	pyramid = [image]
 
-	for i in range(5):
+	for i in range(depth):
 		image = cv2.pyrDown(image)
 		pyramid.append(image)
 
@@ -190,10 +176,10 @@ def laplace_pyramid(gauss_pyr):
 	Used in laplace_blend()
 	Iterate the gaussian pyramid
 	'''
+	depth = len(gauss_pyr)-1
+	pyramid = [gauss_pyr[depth-1]]
 
-	pyramid = [gauss_pyr[4]]
-
-	for i in range(4, 0, -1):
+	for i in range(depth-1, 0, -1):
 		expanded_image = cv2.pyrUp(gauss_pyr[i])
 		#print(gauss_pyr[i-1].shape)
 		laplace = cv2.subtract(gauss_pyr[i-1], expanded_image)
