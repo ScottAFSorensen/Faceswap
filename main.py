@@ -6,7 +6,7 @@ from convex import get_hull
 from face import extract_face, delaunay_triangulation, laplace_blend
 from affine_trans import morph_affine
  
-cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
+cap = cv2.VideoCapture('Obama_and_Key.mp4') #0 built-in camera, 1 usb camera
 train_image = cv2.imread('train_image.jpg')
 # Using already existing library for face detector and finding facial landmarks.
 detector = dlib.get_frontal_face_detector()  # face detector
