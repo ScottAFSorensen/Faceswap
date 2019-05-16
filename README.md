@@ -1,4 +1,4 @@
-# Face Swap, ambitious but a bit rubbish
+# Face Swap
 
 ## Python libraries needed:
 numpy
@@ -14,5 +14,5 @@ python3 main.py
 ## main.py
 Press 'q' to stop and exit.
 
-
-
+Set DEBUG = True to run in "debug mode", visually showing all the operations and how the image transforms during runtime.
+Press spacebar during debug mode to enable it.

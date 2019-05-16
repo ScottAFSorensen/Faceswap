@@ -6,13 +6,13 @@ from convex import get_hull
 from face import extract_face, delaunay_triangulation, laplace_blend
 from affine_trans import morph_affine
 
-cap = cv2.VideoCapture(1) #0 built-in camera, 1 usb camera
+DEBUG = False # set True to run debug version of the program
+cap = cv2.VideoCapture(0) #0 built-in camera, 1 usb camera
 
 # Using already existing library for face detector and finding facial landmarks.
 detector = dlib.get_frontal_face_detector()  # face detector
 # Using pre-trained model to detect facial landmarks
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat") # Make sure this is downloaded, see Readme
-DEBUG = False # set True to run debug version of the program
+predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat") # Make sure this is downloaded, see README
 
 # ----------------facial landmarks-----------------------
 
@@ -118,9 +118,9 @@ while True:
             swapped = swap_faces(FRAME, gray, faces)
             cv2.imshow('Video', swapped)
     else:
+        cv2.putText(FRAME,"Can't find two faces", (0,FRAME.shape[0]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
         cv2.imshow('Video', FRAME)
-
-
+        
 cv2.destroyAllWindows()  # close video
 
 
