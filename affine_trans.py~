@@ -13,11 +13,19 @@ def get_affine(src, src_tri, dest_tri, size):
     return dst
 
 
-def morph_affine(tri_1, tri_2, orig_img, morphed_image, debug=False):
+def morph_affine(tri_1, tri_2, orig_img, morphed_image):
 
     x_1, y_1, w_1, h_1 = cv2.boundingRect(np.float32([tri_1]))
     x_2, y_2, w_2, h_2 = cv2.boundingRect(np.float32([tri_2]))
+<<<<<<< HEAD
     # maybe i can just use a rotation rectangle instead of offset stuff ? couldnt figure it out
+=======
+    #print("x1 is: {}, y1 is : {}, w_1 is: {}, h1 is {}".format(x_1, y_1, w_1, h_1))
+    #print("x2 is: {}, y2 is : {}, w_2 is: {}, h2 is {}".format(x_2, y_2, w_2, h_2))
+    if any(n < 0 for n in [x_1, y_1, x_2, y_2]):
+        return morphed_image
+    # maybe i can just use a rotation rectangle instead of offset stuff ?
+>>>>>>> b52bde7fabcdd6839f782759b89f185de8f48ee0
     # https://docs.opencv.org/3.1.0/dd/d49/tutorial_py_contour_features.html
 
     # makes an offset to fit the rectangle boxes better to the triangles.
@@ -46,7 +54,4 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image, debug=False):
 
     # slices tbe area we care about, adds the new face, and puts it back into where it belongs, back to mama
     morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = (morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)) + transformed_triangle_only
-    if debug:
-        cv2.imshow('Image during transformation', morphed_image)
-        cv2.waitKey()
     return morphed_image

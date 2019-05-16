@@ -15,9 +15,7 @@ detector = dlib.get_frontal_face_detector()  # face detector
 # Using pre-trained model to detect facial landmarks
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 debug = False
-
-
-# ---------------- facial landmarks-----------------------
+# ----------------get facial landmarks-----------------------
 # Should be the length of predictor, can change it later
 n_faces = 2
 marker_start = 0
@@ -32,10 +30,8 @@ n_markers = marker_end - marker_start
 # FRAME = None
 
 
-def swap_faces(FRAME):
+def swap_faces(FRAME, gray, faces):
     facial_landmarks = np.zeros((n_faces, n_markers, 2))  # create mat
-    gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY)  # use detector on gray scale image
-    faces = detector(gray)  # dlib
 
     for m in range(0, n_faces):
         landmarks = predictor(gray, faces[m])  # dlib
@@ -69,14 +65,14 @@ def swap_faces(FRAME):
 
     swapp = np.copy(FRAME)
     if debug:
-        cv2.waitKey()
         cv2.imshow('before affine transform and swapping', swapp)
+        cv2.waitKey()
 
     for i in range(len(tri_face1_in_face2[0])):
-        morph_affine(tri_face1_in_face2[0][i], tri_face1_in_face2[1][i], FRAME, swapp)
+        morph_affine(tri_face1_in_face2[0][i], tri_face1_in_face2[1][i], FRAME, swapp, debug)
 
     for i in range(len(tri_face2_in_face1[0])):
-        morph_affine(tri_face2_in_face1[0][i], tri_face2_in_face1[1][i], FRAME, swapp)
+        morph_affine(tri_face2_in_face1[0][i], tri_face2_in_face1[1][i], FRAME, swapp, debug)
 
     if debug:
         cv2.imshow('after affine transform and swapping', swapp)
@@ -88,14 +84,19 @@ def swap_faces(FRAME):
     # Use facials landmarks 0 and 16, see landmark_numbers.png
     width_face1 = abs(facial_landmarks[0][16][0] - facial_landmarks[0][0][0]) # width of face in pixels in horizontal direction.
     width_face2 = abs(facial_landmarks[1][16][0] - facial_landmarks[1][0][0])
-    blur_size = int(((width_face1 + width_face2)/2))
+    blur_size = int(((width_face1 + width_face2)/2)*0.5)
     if blur_size % 2 == 0:
         blur_size += 1
 
+<<<<<<< HEAD
     swapp2 = laplace_blend(FRAME, swapp, face1_mask, face2_mask, blur_size)
     
 
     return swapp, swapp2
+=======
+    swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask, blur_size)
+    return swapp
+>>>>>>> 4cceb0d336b3121149b00059fe4035d0bb3b4673
 
 #FRAME = train_image
 while True:
@@ -103,8 +104,6 @@ while True:
     gray = None
     faces = None
     ret, FRAME = cap.read()
-    # cv2.imshow('Video',frame)
-
     if cv2.waitKey(25) & 0xFF == ord('q'):  # Q to quit
         break
 
@@ -112,11 +111,24 @@ while True:
     faces = detector(gray)  # dlib
 
 
+<<<<<<< HEAD
     swapped, laplace = swap_faces(train_image)
     cv2.imshow('FaceSwap', laplace)
+=======
+    if len(faces) >= 2:
+        if debug:
+            if cv2.waitKey(25) & 0xFF == ord(' '):  # Q to quit
+                swapped = swap_faces(FRAME, gray, faces)
+            else:
+                cv2.imshow('Video', FRAME)
+        else:
+            swapped = swap_faces(FRAME, gray, faces)
+            cv2.imshow('Video', swapped)
+    else:
+        cv2.imshow('Video', FRAME)
+>>>>>>> 4cceb0d336b3121149b00059fe4035d0bb3b4673
 
 
-    # time.sleep(0.0)
 cv2.destroyAllWindows()  # close video
 
 
