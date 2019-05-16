@@ -1,13 +1,18 @@
 # Face Swap, ambitious but rubbish
 
+## Python libraries needed:
+numpy
+cv2
+dlib
 
-## Overleaf link
-Skriv alle idéer og forklaringer og stuff her:
-https://www.overleaf.com/9526757851nzkxqbhqgxfp
+Datafile "shape_predictor_68_face_landmarks.dat" also needed.
+Can be downloaded from here: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
+
+## Run with:
+python3 main.py
 
 ## main.py
-Trykk på 'q' for å avslutte video.
-Trykk på spacebar for å hente ut ett bilde.
+Press 'q' to stop and exit.
 
 
 

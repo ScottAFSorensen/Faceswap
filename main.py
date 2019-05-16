@@ -92,10 +92,10 @@ def swap_faces(FRAME):
     if blur_size % 2 == 0:
         blur_size += 1
 
-    swapp = laplace_blend(FRAME, swapp, face1_mask, face2_mask, blur_size)
+    swapp2 = laplace_blend(FRAME, swapp, face1_mask, face2_mask, blur_size)
     
 
-    return swapp
+    return swapp, swapp2
 
 #FRAME = train_image
 while True:
@@ -111,11 +111,9 @@ while True:
     gray = cv2.cvtColor(FRAME, cv2.COLOR_BGR2GRAY)  # use detector on gray scale image
     faces = detector(gray)  # dlib
 
-    cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('Video', 1600, 1600)
 
-    swapped = swap_faces(train_image)
-    cv2.imshow('Video', swapped)
+    swapped, laplace = swap_faces(train_image)
+    cv2.imshow('FaceSwap', laplace)
 
 
     # time.sleep(0.0)
