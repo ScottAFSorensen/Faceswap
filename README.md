@@ -2,7 +2,9 @@
 
 ## Python libraries needed:
 numpy
+
 cv2
+
 dlib
 
 Datafile "shape_predictor_68_face_landmarks.dat" also needed.
