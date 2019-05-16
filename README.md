@@ -1,4 +1,4 @@
-# Face Swap, ambitious but rubbish
+# Face Swap, ambitious but a bit rubbish
 
 ## Python libraries needed:
 numpy

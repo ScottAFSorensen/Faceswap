@@ -146,7 +146,7 @@ def laplace_blend(image, swapped_image, mask1, mask2, k_size):
 	# blend according to mask in each level
 	blended_pyr = []
 	for i in range(depth):
-		blended_pyr.append( gauss_pyr_mask[i]*laplace_pyr_swap[depth-1-i] + gauss_pyr_mask_f[i]*laplace_pyr_orig[depth-1-i])# create the blended pyramid
+		blended_pyr.append(gauss_pyr_mask[i]*laplace_pyr_swap[depth-1-i] + gauss_pyr_mask_f[i]*laplace_pyr_orig[depth-1-i])# create the blended pyramid
 	
 	# collapse pyramid
 	output = blended_pyr[depth-1]

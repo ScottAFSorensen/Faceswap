@@ -4,39 +4,24 @@ import numpy as np
 
 
 def get_affine(src, src_tri, dest_tri, size):
-    '''
-	:param src:           Source image (Cropped area containing the triangle area)
-	:param src_tri:       Source triangle
-	:param dest_tri:      Destination triangle
-	:param size:          Size of bounding box of triangle
-
-	:return dst:          Affine warped src image
-	'''
-    
     # Given a pair of triangles, find the affine transform.
     warp_mat = cv2.getAffineTransform(np.float32(src_tri), np.float32(dest_tri))
 
     # Apply the Affine Transform just found to the src image
     dst = cv2.warpAffine(src, warp_mat, (size[0], size[1]), None, flags=cv2.INTER_LINEAR,
                          borderMode=cv2.BORDER_REFLECT_101)
-
     return dst
 
 
-def morph_affine(tri_1, tri_2, orig_img, morphed_image, debug=False):
-    '''
-	:param tri_1:           Triangle in face 1 (pixel coordinates)
-	:param tri_2:           Corresponding triangle in face 2 (pixel coordinates)
-	:param orig_img:        Original frame from camera.
-	:param morphed_image:   Copy of orig_img, this image we morph
-    :param debug:           Set True to run in "debug" mode
-
-	:return None:
-	'''
+def morph_affine(tri_1, tri_2, orig_img, morphed_image):
 
     x_1, y_1, w_1, h_1 = cv2.boundingRect(np.float32([tri_1]))
     x_2, y_2, w_2, h_2 = cv2.boundingRect(np.float32([tri_2]))
-    # maybe i can just use a rotation rectangle instead of offset stuff ? couldnt figure it out
+    #print("x1 is: {}, y1 is : {}, w_1 is: {}, h1 is {}".format(x_1, y_1, w_1, h_1))
+    #print("x2 is: {}, y2 is : {}, w_2 is: {}, h2 is {}".format(x_2, y_2, w_2, h_2))
+    if any(n < 0 for n in [x_1, y_1, x_2, y_2]):
+        return morphed_image
+    # maybe i can just use a rotation rectangle instead of offset stuff ?
     # https://docs.opencv.org/3.1.0/dd/d49/tutorial_py_contour_features.html
 
     # makes an offset to fit the rectangle boxes better to the triangles.
@@ -54,18 +39,15 @@ def morph_affine(tri_1, tri_2, orig_img, morphed_image, debug=False):
     size_bounds_triangle_2 = (w_2, h_2)
     # make sure it is a triangle and not a line, just bug catching
     if 0 in img1_within_boundary.shape:
-        return # Some error, just return
-
+        return morphed_image
     transformed_area = get_affine(img1_within_boundary, offset_triangle_1, offset_triangle_2, size_bounds_triangle_2)
     # remove all parts of the transformed image outside the area we care about (triangle mask)
     transformed_triangle_only = transformed_area * mask
     shape1 = mask.shape
     shape2 = morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2].shape
     if shape1 != shape2:
-        return # Some error, just return
+        return morphed_image
 
     # slices tbe area we care about, adds the new face, and puts it back into where it belongs, back to mama
     morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] = (morphed_image[y_2:y_2 + h_2, x_2:x_2 + w_2] * ((1.0, 1.0, 1.0) - mask)) + transformed_triangle_only
-    if debug:
-        cv2.imshow('Image during transformation', morphed_image)
-        cv2.waitKey()
+    return morphed_image
