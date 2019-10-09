@@ -34,7 +34,7 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image,
 	:param face1_landmarks: Facial landmarks for the first face
 	:param face2_landmarks: Facial landmarks for the second face
 	:param image:           Image to draw the delaunay triangulation on
-	:param debug:           Boolean to determine if debug is on, draws the delaunay triangles of the image if yes
+	:param debug:           Set True to run in "debug" mode
 
 	:return triangles1:     List with all the triangles in face1 as pixel coordinates
 	:return triangles2:     List with all the triangles in face2 as pixel coordinates
@@ -46,10 +46,10 @@ def delaunay_triangulation(convex_hull, face1_landmarks, face2_landmarks, image,
 	face1_landmarks_list = face1_landmarks.astype(int).tolist()
 	face2_landmarks_list = face2_landmarks.astype(int).tolist()
 
-	bounding_box = cv2.boundingRect(convex_hull)
+	bounding_box = cv2.boundingRect(convex_hull) # Area to draw trangles in
 
 	subdiv = cv2.Subdiv2D(bounding_box)
-	subdiv.insert(face1_landmarks_list)
+	subdiv.insert(face1_landmarks_list) # insert the points
 
 	# split face into triangles
 	triang = subdiv.getTriangleList()
@@ -146,7 +146,7 @@ def laplace_blend(image, swapped_image, mask1, mask2, k_size):
 	# blend according to mask in each level
 	blended_pyr = []
 	for i in range(depth):
-		blended_pyr.append( gauss_pyr_mask[i]*laplace_pyr_swap[depth-1-i] + gauss_pyr_mask_f[i]*laplace_pyr_orig[depth-1-i])# create the blended pyramid
+		blended_pyr.append(gauss_pyr_mask[i]*laplace_pyr_swap[depth-1-i] + gauss_pyr_mask_f[i]*laplace_pyr_orig[depth-1-i])# create the blended pyramid
 	
 	# collapse pyramid
 	output = blended_pyr[depth-1]
@@ -164,7 +164,7 @@ def gaussian_pyramid(image, depth):
 
 	pyramid = [image]
 
-	for i in range(depth):
+	for _ in range(depth):
 		image = cv2.pyrDown(image)
 		pyramid.append(image)
 
